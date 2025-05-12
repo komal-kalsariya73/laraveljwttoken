@@ -95,7 +95,7 @@
                           <a href="#">
                             <div class="notif-img">
                               <img
-                                src="assets/img/profile.jpg"
+                                src="/assets/img/profile.jpg"
                                 alt="Img Profile"
                               />
                             </div>
@@ -134,7 +134,7 @@
                     aria-expanded="false"
                   >
                     <div class="avatar-sm">
-                    <img class="avatar rounded-circle"  src="assets/img/profile.jpg" alt="Profile Image" width="40" height="40">
+                    <img class="avatar rounded-circle"  src="/assets/img/profile.jpg" alt="Profile Image" width="40" height="40">
                     </div>
                     <span class="profile-username">
                       <span class="op-7"></span>
@@ -146,7 +146,7 @@
                       <li>
                         <div class="user-box">
                           <div class="avatar-lg">
-                          <img class="avatar rounded-circle" src="assets/img/profile.jpg" alt="Profile Image" width="40" height="40">
+                          <img class="avatar rounded-circle" src="/assets/img/profile.jpg" alt="Profile Image" width="40" height="40">
                           </div>
                           <div class="u-text">
                             <h4></h4>

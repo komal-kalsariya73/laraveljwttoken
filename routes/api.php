@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\StaffController;
 
 
 
@@ -27,7 +28,10 @@ Route::middleware('auth.api')->group(function () {
     
     // Route::post('logout', [AuthController::class, 'logoutapi']);
      Route::get('logoutapi', [AuthController::class, 'logoutapi']);
-    Route::get('user', [AuthController::class, 'user']);
+     Route::get('user', [AuthController::class, 'user']);
     Route::get('dashboard', [AdminController::class, 'dashboard']);
+    //staff 
+    Route::post('/employees/store', [StaffController::class, 'store'])->name('employees.store');
+     Route::get('/employees/all', [StaffController::class, 'getAllEmployees'])->name('employees.all');
 }); 
 

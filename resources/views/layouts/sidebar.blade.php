@@ -4,7 +4,7 @@
     <div class="logo-header" data-background-color="dark">
       <a href="/dashboard" class="logo">
         <img
-          src="assets/img/kaiadmin/logo_light.svg"
+          src="/assets/img/kaiadmin/logo_light.svg"
           alt="navbar brand"
           class="navbar-brand"
           height="20" />
@@ -58,7 +58,7 @@
           <div class="collapse" id="base">
             <ul class="nav nav-collapse">
               <li>
-                <a href="">
+                <a href="\employee\view">
                   <span class="sub-item">All Staff</span>
                 </a>
               </li>
