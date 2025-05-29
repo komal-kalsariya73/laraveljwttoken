@@ -10,10 +10,12 @@
         <h3 class="fw-bold mb-3">All Staff</h3>
         <h6 class="op-7 mb-2">Staff-table-information</h6>
       </div>
+       @if(auth()->check() && auth()->user()->role === 'admin')   
       <div class="ms-md-auto py-2 py-md-0">
 
-        <a href="" class="btn text-uppercase btn-round" style="background:#07193e;color:white">Add Staff</a>
+        <a href="{{route ('employee')}}" class="btn text-uppercase btn-round" style="background:#07193e;color:white">Add Staff</a>
       </div>
+      @endif
     </div>
 
 
@@ -91,6 +93,24 @@
       });
     }
   });
+  window.deleteEmployee = function(id) {
+      if (confirm('Are you sure you want to delete this employee?')) {
+        $.ajax({
+          url: '/employee/delete/' + id,
+          type: 'DELETE',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRF for Laravel
+          },
+          success: function (res) {
+            alert(res.success);
+            fetchEmployees(); // refresh table
+          },
+          error: function (xhr) {
+            alert('Failed to delete employee');
+          }
+        });
+      }
+    }
 </script>
 
 @endsection

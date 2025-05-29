@@ -71,8 +71,5 @@ class Kernel extends HttpKernel
          'auth.api' => \App\Http\Middleware\AuthMiddleware::class,
         'auth.web' => \App\Http\Middleware\AuthwebMiddleware::class,
         'auth.web.req' => \App\Http\Middleware\RedirectAuthwebMiddleware::class,
-         
-         
-         
-    ];
+     ];
 }

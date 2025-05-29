@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->morphs('tokenable');
             $table->string('name');
+            $table->string('phone')->nullable();
+            $table->string('address')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('education')->nullable();
+            $table->string('company')->nullable();
+            $table->string('location')->nullable();
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
             $table->timestamp('last_used_at')->nullable();

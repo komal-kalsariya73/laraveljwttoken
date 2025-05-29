@@ -49,6 +49,8 @@
           </span>
           <h4 class="text-section">Components</h4>
         </li>
+      @if(auth()->check() && auth()->user()->role === 'admin')
+
         <li class="nav-item">
           <a data-bs-toggle="collapse" href="#base">
             <i class="fas fa-layer-group"></i>
@@ -58,18 +60,40 @@
           <div class="collapse" id="base">
             <ul class="nav nav-collapse">
               <li>
-                <a href="\employee\view">
-                  <span class="sub-item">All Staff</span>
+                <a href="{{ route ('employee.view') }}">
+                  <span class="sub-item">All Users</span>
                 </a>
               </li>
               <li>
-                <a href="\employee">
-                  <span class="sub-item">Add Employee</span>
+                <a href="{{ route ('employee') }}">
+                  <span class="sub-item">Add User</span>
                 </a>
               </li>
             </ul>
           </div>
         </li>
+            @endif
+             @if(auth()->check() && auth()->user()->role === 'employee')
+
+        <li class="nav-item">
+          <a data-bs-toggle="collapse" href="#base">
+            <i class="fas fa-layer-group"></i>
+            <p>User</p>
+            <span class="caret"></span>
+          </a>
+          <div class="collapse" id="base">
+            <ul class="nav nav-collapse">
+              <li>
+                <a href="{{ route ('employee.view') }}">
+                  <span class="sub-item">All Users</span>
+                </a>
+              </li>
+             
+            </ul>
+          </div>
+        </li>
+            @endif
+              @if(auth()->check() && auth()->user()->role === 'admin')
         <li class="nav-item">
           <a data-bs-toggle="collapse" href="#sidebarLayouts">
             <i class="fas fa-th-list"></i>
@@ -91,6 +115,7 @@
             </ul>
           </div>
         </li>
+             @endif
         <li class="nav-item">
           <a data-bs-toggle="collapse" href="#forms">
             <i class="fas fa-pen-square"></i>
@@ -112,12 +137,7 @@
             </ul>
           </div>
         </li>
-
-
-
-
-
-        <li class="nav-item">
+ <li class="nav-item">
           <a data-bs-toggle="collapse" href="#submenu">
             <i class="
 fas fa-plus"></i>
@@ -190,7 +210,7 @@ fas fa-plus"></i>
 
 
         <li class="nav-item">
-          <a href="">
+          <a href="{{route ('chat')}}">
             <i class="fas fa-file"></i>
             <p>Chat</p>
             <!-- <span class="badge badge-secondary">1</span> -->

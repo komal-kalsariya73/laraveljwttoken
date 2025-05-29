@@ -59,7 +59,7 @@ class AuthController extends Controller
      
     }
 
-   public function logoutapi(Request $request)
+public function logoutapi(Request $request)
 {
     $user = $request->user();
 

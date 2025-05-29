@@ -25,8 +25,9 @@
                         <!-- <h5 class="card-header">Add Customer Details</h5> -->
                         <div class="card-body">
                             <form id="employeeForm" data-parsley-validate="" novalidate=""
-                                class=" w-75  m-auto p-4" action="" method=""
+                                class="w-75  m-auto p-4" action="" method=""
                                 enctype="multipart/form-data">
+                                @csrf
                                 <h2 class="text-center">Add Staff Details</h2>
                                 <section class="">
                                     <div class="container">
@@ -40,7 +41,7 @@
                                                                     <div class="col-md-6 mb-4">
                                                                         <input type="hidden" name="role" value="2">
                                                                         <input type="hidden" name="id" id="id">
-                                                                       
+
                                                                         <div class="form-group">
                                                                             <label class="form-label fs-5">First name</label>
 
@@ -118,7 +119,7 @@
 
                                                                 </div>
                                                                 <!-- <span id="demo8" style="color: red;" class="mt=0">Please enter your Number</span> -->
-                                                                <div class="d-md-flex justify-content-start align-items-center m-3">
+                                                                <div class="d-md-flex justify-content-start align-items-center mt-3 ms-3">
                                                                     <label class="form-label fs-5">Gender</label>
 
                                                                     <input type="radio" name="gender" id="gender" value="male" class="m-3 fs-4 text-light" /> Male
@@ -129,7 +130,7 @@
                                                                     <input type="radio" name="gender" id="gender" value="female" class="m-3" /> Female
 
                                                                 </div>
-                                                                <div class="error text-danger" id="genderError"></div>
+                                                                <div class="error text-danger" id="genderError" class="ms-3"></div>
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-4">
                                                                         <div class="form-group">
@@ -211,44 +212,51 @@
     </div>
 </div>
 <script>
-$('#employeeForm').on('submit', function(e) {
-    e.preventDefault();
-let token = localStorage.getItem('auth_token');
-console.log(token);
-    var formData = new FormData(this);
+    $('#employeeForm').on('submit', function(e) {
+        e.preventDefault();
 
-    $.ajax({
-        url: '/api/employees/store', // Your API URL
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-           'Authorization': "Bearer " + token,  // ✅ Correct header name and space
-        },
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(response) {
-            if (response.success) {
-                alert(response.success);
-                // Optionally reset form
+        // Clear previous errors
+        $('.error').html('');
+        $('#responseMessage').html('');
+
+        let token = localStorage.getItem('auth_token'); // JWT token if applicable
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: '/api/employees/store',
+            type: 'POST',
+            data: formData,
+            headers: {
+                'Authorization': 'Bearer ' + token // Add only if your API is protected
+            },
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                $('#responseMessage').html(`
+                    <div class="alert alert-success">${response.success}</div>
+                `);
                 $('#employeeForm')[0].reset();
-            } else {
-                alert('Something went wrong!');
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) {
+                    let errors = xhr.responseJSON.errors;
+                    if (errors.fname) $('#nameError').html(errors.fname[0]);
+                    if (errors.phone) $('#phoneError').html(errors.phone[0]);
+                    if (errors.email) $('#emailError').html(errors.email[0]);
+                    if (errors.password) $('#passwordError').html(errors.password[0]);
+                    if (errors.gender) $('#genderError').html(errors.gender[0]);
+                    if (errors.city) $('#cityError').html(errors.city[0]);
+                    if (errors.address) $('#addressError').html(errors.address[0]);
+                    if (errors.image) $('#imageError').html(errors.image[0]);
+                } else {
+                    $('#responseMessage').html(`
+            <div class="alert alert-danger">Something went wrong. Please try again.</div>
+        `);
+                }
             }
-        },
-        error: function(xhr) {
-            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                let errors = xhr.responseJSON.errors;
-                let errorMsg = '';
-                $.each(errors, function(key, value) {
-                    errorMsg += value + '\n';
-                });
-                alert(errorMsg);
-            } else {
-                alert('Server error');
-            }
-        }
+
+        });
     });
-});
 </script>
+
 @endsection

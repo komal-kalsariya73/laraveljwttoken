@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <div class="container">
     <div class="page-inner">
@@ -28,6 +29,7 @@
                                 class=" w-75  m-auto p-4" action="" method=""
                                 enctype="multipart/form-data">
                                 <h2 class="text-center">Add Staff Details</h2>
+                                    <input type="hidden" name="id" value="{{ $employee->id }}">
                                 <section class="">
                                     <div class="container">
                                         <div class="row d-flex justify-content-center align-items-center">
@@ -39,7 +41,8 @@
                                                                 <div class="row">
                                                                     <div class="col-md-6 mb-4">
                                                                         <input type="hidden" name="role" value="2">
-                                                                        <input type="hidden" name="id" id="id">
+                                                                       <input type="hidden" id="employee_id" value="{{ $employee->id }}">
+
                                                                        
                                                                         <div class="form-group">
                                                                             <label class="form-label fs-5">First name</label>
@@ -51,7 +54,7 @@
                                                                                 <input
                                                                                     type="text"
                                                                                     class="form-control border border-1"
-                                                                                    placeholder="Enter Your Firstname" name="fname" id="fname" />
+                                                                                    placeholder="Enter Your Firstname" name="fname" id="fname"  value="{{ old('fname', $employee->fname) }}"/>
                                                                             </div>
                                                                             <div class="error text-danger" id="nameError"></div>
                                                                         </div>
@@ -70,7 +73,7 @@
                                                                                 <input
                                                                                     type="text"
                                                                                     class="form-control border border-1"
-                                                                                    placeholder="Enter Pnone Number" name="phone" id="phone" />
+                                                                                    placeholder="Enter Pnone Number" name="phone" id="phone"  value="{{ old('phone', $employee->phone) }}" />
                                                                             </div>
                                                                             <div class="error text-danger" id="phoneError"></div>
                                                                         </div>
@@ -89,7 +92,7 @@
                                                                                 <input
                                                                                     type="text"
                                                                                     class="form-control border border-1"
-                                                                                    placeholder="Enter Your Email" name="email" id="email" />
+                                                                                    placeholder="Enter Your Email" name="email" id="email" value="{{ old('email', $employee->email) }}"/>
                                                                             </div>
                                                                             <div class="error text-danger" id="emailError"></div>
                                                                         </div>
@@ -121,12 +124,9 @@
                                                                 <div class="d-md-flex justify-content-start align-items-center m-3">
                                                                     <label class="form-label fs-5">Gender</label>
 
-                                                                    <input type="radio" name="gender" id="gender" value="male" class="m-3 fs-4 text-light" /> Male
+                                                                    <input type="radio" name="gender" id="gender" value="male" class="m-3 fs-4 text-light" {{ old('gender', $employee->gender) == 'male' ? 'checked' : '' }}/> Male
 
-
-
-
-                                                                    <input type="radio" name="gender" id="gender" value="female" class="m-3" /> Female
+                                                                     <input type="radio" name="gender" id="gender" value="female" class="m-3" {{ old('gender', $employee->gender) == 'female' ? 'checked' : '' }}/> Female
 
                                                                 </div>
                                                                 <div class="error text-danger" id="genderError"></div>
@@ -142,10 +142,10 @@
                                                                                 <select class="form-control pl-3 border border-1" id="city"
                                                                                     name="city">
                                                                                     <option selected disabled> Choose city...</option>
-                                                                                    <option value="Surat">Surat</option>
-                                                                                    <option value="Mumbai">Mumbai</option>
-                                                                                    <option value="London">London</option>
-                                                                                    <option value="Rajkot">Rajkot</option>
+                                                                                    <option value="Surat" {{ old('city', $employee->city) == 'Surat' ? 'selected' : '' }}>Surat</option>
+                                                                                    <option value="Mumbai" {{ old('city', $employee->city) == 'Mumbai' ? 'selected' : '' }}>Mumbai</option>
+                                                                                    <option value="London" {{ old('city', $employee->city) == 'London' ? 'selected' : '' }}>London</option>
+                                                                                    <option value="Rajkot" {{ old('city', $employee->city) == 'Rajkot' ? 'selected' : '' }}>Rajkot</option>
 
                                                                                 </select>
                                                                             </div>
@@ -163,7 +163,7 @@
                                                                                 <textarea
                                                                                     type="text"
                                                                                     class="form-control border border-1"
-                                                                                    placeholder="Enter Your Address" name="address" id="address"></textarea>
+                                                                                    placeholder="Enter Your Address" name="address" id="address">{{ old('address', $employee->address) }}</textarea>
                                                                             </div>
                                                                             <div class="error text-danger" id="addressError"></div>
                                                                         </div>
@@ -177,7 +177,13 @@
                                                                     accept="image/*"><br>
                                                                 <div class="error text-danger" id="imageError"></div>
                                                                 <input type="hidden" name="existing_profile_image" id="existing_profile_image" value="">
-                                                                <div id="currentProfileImage"></div>
+                                                               @if($employee->image)
+    <div id="currentProfileImage">
+        <img src="{{ asset('' . $employee->image) }}" alt="Profile Image" width="100">
+    </div>
+    <input type="hidden" name="existing_profile_image" value="{{ $employee->image }}">
+@endif
+
                                                                 <div id="responseMessage"></div>
                                                             </div>
 
@@ -211,44 +217,32 @@
     </div>
 </div>
 <script>
-$('#employeeForm').on('submit', function(e) {
+ 
+    $('#employeeForm').on('submit', function(e) {
     e.preventDefault();
-let token = localStorage.getItem('auth_token');
-console.log(token);
+    let token = localStorage.getItem('auth_token');
     var formData = new FormData(this);
 
     $.ajax({
-        url: '/api/employees/store', // Your API URL
-        method: 'POST',
-        headers: {
+       url: '/employees/update/' + $('#employee_id').val(), // Use plain URL with ID
+         method: 'POST',
+            headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
            'Authorization': "Bearer " + token,  // ✅ Correct header name and space
         },
         data: formData,
-        processData: false,
         contentType: false,
-        success: function(response) {
-            if (response.success) {
-                alert(response.success);
-                // Optionally reset form
-                $('#employeeForm')[0].reset();
-            } else {
-                alert('Something went wrong!');
-            }
+        processData: false,
+        success: function(res) {
+            alert(res.success);
+            // Optionally reload or redirect
         },
         error: function(xhr) {
-            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                let errors = xhr.responseJSON.errors;
-                let errorMsg = '';
-                $.each(errors, function(key, value) {
-                    errorMsg += value + '\n';
-                });
-                alert(errorMsg);
-            } else {
-                alert('Server error');
-            }
+            console.log(xhr.responseJSON.errors);
         }
     });
 });
+
 </script>
+
 @endsection

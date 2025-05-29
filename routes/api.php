@@ -18,6 +18,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StaffController;
 
+use App\Http\Controllers\ChatController;
+
 
 
 
@@ -32,6 +34,11 @@ Route::middleware('auth.api')->group(function () {
     Route::get('dashboard', [AdminController::class, 'dashboard']);
     //staff 
     Route::post('/employees/store', [StaffController::class, 'store'])->name('employees.store');
-     Route::get('/employees/all', [StaffController::class, 'getAllEmployees'])->name('employees.all');
+    Route::get('/employees/all', [StaffController::class, 'getAllEmployees'])->name('employees.all');
+
+    // Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/messages/{id}', [ChatController::class, 'fetch']);
+
+    Route::post('/messages/send', [ChatController::class, 'send']);
 }); 
 
